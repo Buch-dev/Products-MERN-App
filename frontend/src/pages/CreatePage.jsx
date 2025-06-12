@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useColorModeValue } from "../components/ui/color-mode";
+import { useProductStore } from "../store/product";
 
 function CreatePage() {
   const [newProduct, setNewProduct] = useState({
@@ -16,13 +17,20 @@ function CreatePage() {
     image: "",
   });
 
+  const { createProduct } = useProductStore();
+
   const handleChange = (e) => {
     setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Add your submit logic here
+    const { success, message } = await createProduct(newProduct);
+    console.log(newProduct);
+    console.log("Success:", success);
+    console.log("Message:", message);
+
     setNewProduct({ name: "", price: "", image: "" });
   };
 
@@ -69,13 +77,7 @@ function CreatePage() {
               focusBorderColor="blue.400"
               bg={useColorModeValue("gray.50", "gray.700")}
             />
-            <Button
-              type="submit"
-              colorScheme="blue"
-              size="lg"
-              mt={4}
-              w="full"
-            >
+            <Button type="submit" colorScheme="blue" size="lg" mt={4} w="full">
               Create Product
             </Button>
           </VStack>

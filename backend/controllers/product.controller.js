@@ -5,7 +5,7 @@ export const getProducts = async (req, res) => {
     const products = await Product.find({});
     return res.status(200).json({
       success: true,
-      products,
+      data: products,
     });
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -29,7 +29,7 @@ export const createProduct = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: 'Product created successfully',
-      product: newProduct,
+      data: newProduct,
     });
   } catch (error) {
     console.error('Error creating product:', error);
