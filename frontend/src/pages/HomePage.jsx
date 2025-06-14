@@ -48,7 +48,8 @@ function HomePage() {
     }));
   };
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     const response = await useProductStore
       .getState()
       .updateProduct(selectedProduct._id, updatedProduct);
@@ -86,49 +87,51 @@ function HomePage() {
               spacing={10}
               w={"full"}
             >
-              {products.map((product) => (
-                <Box
-                  key={product._id}
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  p={4}
-                  boxShadow="md"
-                  _hover={{ boxShadow: "lg" }}
-                >
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    boxSize="200px"
-                    objectFit="cover"
-                    mx="auto"
-                    borderRadius="md"
-                    fallbackSrc="https://via.placeholder.com/200"
-                  />
-                  <Text fontSize="xl" fontWeight="bold" mt={2}>
-                    {product.name}
-                  </Text>
-                  <Text color="blue.600" fontSize="lg">
-                    ${product.price}
-                  </Text>
+              {products.map((product) =>
+                // ✅ Check if product has an image before rendering
+                product && product.image ? (
+                  <Box
+                    key={product._id}
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    p={4}
+                    boxShadow="md"
+                    _hover={{ boxShadow: "lg" }}
+                  >
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      boxSize="200px"
+                      objectFit="cover"
+                      mx="auto"
+                      borderRadius="md"
+                    />
+                    <Text fontSize="xl" fontWeight="bold" mt={2}>
+                      {product.name}
+                    </Text>
+                    <Text color="blue.600" fontSize="lg">
+                      ${product.price}
+                    </Text>
 
-                  <HStack spacing={4} mt={4}>
-                    <IconButton
-                      icon={<FaEdit />}
-                      colorScheme="blue"
-                      size="sm"
-                      aria-label="Edit Product"
-                      onClick={() => handleEditClick(product)}
-                    />
-                    <IconButton
-                      icon={<MdDelete />}
-                      colorScheme="red"
-                      size="sm"
-                      aria-label="Delete Product"
-                      onClick={() => handleDelete(product._id)}
-                    />
-                  </HStack>
-                </Box>
-              ))}
+                    <HStack spacing={4} mt={4}>
+                      <IconButton
+                        icon={<FaEdit />}
+                        colorScheme="blue"
+                        size="sm"
+                        aria-label="Edit Product"
+                        onClick={() => handleEditClick(product)}
+                      />
+                      <IconButton
+                        icon={<MdDelete />}
+                        colorScheme="red"
+                        size="sm"
+                        aria-label="Delete Product"
+                        onClick={() => handleDelete(product._id)}
+                      />
+                    </HStack>
+                  </Box>
+                ) : null
+              )}
             </SimpleGrid>
           ) : (
             <Text
@@ -156,7 +159,13 @@ function HomePage() {
       {isModalOpen && updatedProduct && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
-            <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "1rem" }}>
+            <h2
+              style={{
+                fontSize: "20px",
+                fontWeight: "bold",
+                marginBottom: "1rem",
+              }}
+            >
               Edit Product
             </h2>
             <Input
@@ -187,12 +196,13 @@ function HomePage() {
                 display: "flex",
                 justifyContent: "flex-end",
                 gap: "10px",
+                color: "black",
               }}
             >
-              <Button onClick={closeModal} variant="outline">
+              <Button onClick={closeModal} variant="outline" color={"black"}>
                 Cancel
               </Button>
-              <Button colorScheme="blue" onClick={handleUpdate}>
+              <Button colorScheme="blue" onClick={handleUpdate} color={"black"}>
                 Update
               </Button>
             </div>
@@ -213,6 +223,7 @@ const overlayStyle = {
   right: 0,
   bottom: 0,
   backgroundColor: "rgba(0, 0, 0, 0.5)",
+  color: "black",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
